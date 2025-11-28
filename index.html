@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>MovieWatchlist - Koleksi Film Favorit</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #e74c3c;
+        --accent: #3498db;
+        --light: #ecf0f1;
+        --dark: #2c3e50;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --info: #1abc9c;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--light);
+        overflow-x: hidden;
+      }
+
+      .navbar {
+        background: #1a1a2e;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        color: var(--light) !important;
+        font-size: 1.3rem;
+      }
+
+      .hero-section {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--accent) 100%
+        );
+        color: white;
+        padding: 3rem 0;
+        border-radius: 0 0 30px 30px;
+      }
+
+      .hero-title {
+        font-weight: 800;
+        margin-bottom: 1rem;
+        font-size: 2.2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+      }
+
+      .stats-section {
+        margin-top: -2rem;
+        position: relative;
+        z-index: 10;
+      }
+
+      .stats-card {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        height: 100%;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .stats-card:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .stats-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 0.5rem;
+        line-height: 1;
+      }
+
+      .stats-label {
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .main-content {
+        padding: 3rem 0;
+      }
+
+      .section-title {
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      /* Movie Card Styling - FIXED HOVER */
+      .movie-card {
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .movie-card:hover {
+        transform: translateY(-8px);
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      }
+
+      .movie-card:hover .movie-poster {
+        filter: brightness(1.1);
+      }
+
+      .movie-poster {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transition: filter 0.3s ease;
+      }
+
+      .movie-content {
+        padding: 1.5rem;
+      }
+
+      .movie-title {
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        font-size: 1.3rem;
+        line-height: 1.3;
+      }
+
+      .movie-meta {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+
+      .movie-description {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+
+      .rating-stars {
+        color: var(--warning);
+        margin-bottom: 1rem;
+      }
+
+      .movie-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .movie-tag {
+        background: rgba(52, 152, 219, 0.2);
+        color: var(--accent);
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        border: 1px solid rgba(52, 152, 219, 0.3);
+        transition: all 0.2s ease;
+      }
+
+      .movie-card:hover .movie-tag {
+        background: rgba(52, 152, 219, 0.3);
+        transform: scale(1.05);
+      }
+
+      .movie-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        min-height: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        flex: 1;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary {
+        background: var(--accent);
+      }
+
+      .btn-primary:hover {
+        background: #2980b9;
+      }
+
+      .btn-success {
+        background: var(--success);
+      }
+
+      .btn-success:hover {
+        background: #219653;
+      }
+
+      .btn-warning {
+        background: var(--warning);
+      }
+
+      .btn-warning:hover {
+        background: #e67e22;
+      }
+
+      .btn-danger {
+        background: var(--secondary);
+      }
+
+      .btn-danger:hover {
+        background: #c0392b;
+      }
+
+      .btn-light {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      .btn-light:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .floating-btn {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--secondary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 3px 15px rgba(231, 76, 60, 0.5);
+        z-index: 1000;
+        border: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .floating-btn:hover {
+        transform: scale(1.1) rotate(90deg);
+        box-shadow: 0 5px 20px rgba(231, 76, 60, 0.7);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.3);
+        transition: transform 0.3s ease;
+      }
+
+      .empty-state:hover i {
+        transform: scale(1.1);
+      }
+
+      .empty-state h3 {
+        margin-bottom: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.5rem;
+      }
+
+      .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        background: #1a1a2e;
+        color: white;
+      }
+
+      .modal-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .modal-footer {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .form-control,
+      .form-select {
+        border-radius: 8px;
+        padding: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        transition: all 0.2s ease;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+        background: rgba(255, 255, 255, 0.15);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      .form-select option {
+        background: #1a1a2e;
+        color: white;
+      }
+
+      .form-label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+      }
+
+      .star-rating {
+        display: flex;
+        gap: 0.5rem;
+        margin: 1rem 0;
+      }
+
+      .star {
+        font-size: 1.5rem;
+        color: #555;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .star:hover {
+        color: var(--warning);
+        transform: scale(1.2);
+      }
+
+      .star.active {
+        color: var(--warning);
+        transform: scale(1.1);
+      }
+
+      .filter-section {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .watch-status-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 2;
+        transition: all 0.3s ease;
+      }
+
+      .movie-card:hover .watch-status-badge {
+        transform: scale(1.1);
+      }
+
+      .movie-poster-container {
+        position: relative;
+      }
+
+      /* Upload Image Styles */
+      .upload-container {
+        position: relative;
+        margin-bottom: 1rem;
+      }
+
+      .upload-preview {
+        width: 100%;
+        height: 200px;
+        border: 2px dashed rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+
+      .upload-preview:hover {
+        border-color: var(--accent);
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .upload-preview.has-image {
+        border-style: solid;
+        border-color: var(--success);
+      }
+
+      .upload-preview img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: cover;
+      }
+
+      .upload-placeholder {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .upload-placeholder i {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        display: block;
+      }
+
+      .upload-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .upload-btn {
+        flex: 1;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      @media (max-width: 576px) {
+        .container {
+          padding-left: 15px;
+          padding-right: 15px;
+        }
+        .hero-title {
+          font-size: 1.75rem;
+        }
+        .hero-subtitle {
+          font-size: 0.9rem;
+        }
+        .stats-number {
+          font-size: 1.75rem;
+        }
+        .section-title {
+          font-size: 1.25rem;
+        }
+        .movie-actions {
+          flex-direction: column;
+        }
+        .upload-actions {
+          flex-direction: column;
+        }
+      }
+
+      .movies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .movies-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .genre-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .genre-chip {
+        background: rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.8);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        border: 1px solid transparent;
+        transition: all 0.3s ease;
+      }
+
+      .genre-chip:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .genre-chip.active {
+        background: var(--accent);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+      }
+
+      .genre-chip.active:hover {
+        background: #2980b9;
+        transform: translateY(-3px);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">
+          <i class="fas fa-film me-2"></i>MovieWatchlist
+        </a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container text-center position-relative">
+        <h1 class="hero-title">MovieWatchlist - Koleksi Film Favorit</h1>
+        <p class="hero-subtitle">
+          Kelola daftar film yang ingin ditonton, sudah ditonton, dan beri
+          rating!
+        </p>
+        <button
+          class="btn btn-light btn-lg"
+          data-bs-toggle="modal"
+          data-bs-target="#addMovieModal"
+        >
+          <i class="fas fa-plus me-2"></i>Tambah Film
+        </button>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="container">
+        <div class="row g-3">
+          <div class="col-6 col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="totalMovies">0</div>
+              <div class="stats-label">Total Film</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="watchedMovies">0</div>
+              <div class="stats-label">Sudah Ditonton</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="watchlistMovies">0</div>
+              <div class="stats-label">Ingin Ditonton</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="stats-card">
+              <div class="stats-number" id="avgRating">0</div>
+              <div class="stats-label">Rating Rata-rata</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="main-content" id="watchlist">
+      <div class="container">
+        <div class="filter-section">
+          <h3 class="section-title mb-3">Filter Film</h3>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="statusFilter">
+                <option value="all">Semua Status</option>
+                <option value="watched">Sudah Ditonton</option>
+                <option value="watchlist">Ingin Ditonton</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Genre</label>
+              <select class="form-select" id="genreFilter">
+                <option value="all">Semua Genre</option>
+                <option value="action">Action</option>
+                <option value="drama">Drama</option>
+                <option value="comedy">Comedy</option>
+                <option value="horror">Horror</option>
+                <option value="sci-fi">Sci-Fi</option>
+                <option value="romance">Romance</option>
+                <option value="thriller">Thriller</option>
+                <option value="animation">Animation</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Rating</label>
+              <select class="form-select" id="ratingFilter">
+                <option value="all">Semua Rating</option>
+                <option value="5">5 Bintang</option>
+                <option value="4">4+ Bintang</option>
+                <option value="3">3+ Bintang</option>
+                <option value="2">2+ Bintang</option>
+                <option value="1">1+ Bintang</option>
+              </select>
+            </div>
+          </div>
+          <div class="genre-chips">
+            <div class="genre-chip active" data-genre="all">Semua</div>
+            <div class="genre-chip" data-genre="action">Action</div>
+            <div class="genre-chip" data-genre="drama">Drama</div>
+            <div class="genre-chip" data-genre="comedy">Comedy</div>
+            <div class="genre-chip" data-genre="horror">Horror</div>
+            <div class="genre-chip" data-genre="sci-fi">Sci-Fi</div>
+            <div class="genre-chip" data-genre="romance">Romance</div>
+          </div>
+        </div>
+
+        <h2 class="section-title">Koleksi Film Saya</h2>
+
+        <div class="movies-grid" id="moviesContainer">
+          <!-- Movie cards will be dynamically added here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+          <i class="fas fa-film"></i>
+          <h3>Belum Ada Film</h3>
+          <p>Mulai tambahkan film favoritmu ke dalam watchlist!</p>
+          <button
+            class="btn btn-primary mt-3"
+            data-bs-toggle="modal"
+            data-bs-target="#addMovieModal"
+          >
+            <i class="fas fa-plus me-2"></i>Tambah Film Pertama
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-5 py-4" style="background: rgba(0, 0, 0, 0.3)">
+      <div class="container text-center">
+        <p class="mb-0">
+          &copy; 2024 MovieWatchlist App. Kelola koleksi film favoritmu dengan
+          mudah!
+        </p>
+      </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div
+      class="floating-btn"
+      data-bs-toggle="modal"
+      data-bs-target="#addMovieModal"
+    >
+      <i class="fas fa-plus"></i>
+    </div>
+
+    <!-- Add Movie Modal -->
+    <div class="modal fade" id="addMovieModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Tambah Film Baru</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="addMovieForm">
+              <div class="mb-3">
+                <label for="movieTitle" class="form-label">Judul Film</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="movieTitle"
+                  placeholder="Contoh: Avengers: Endgame"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="movieYear" class="form-label">Tahun Rilis</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="movieYear"
+                  min="1900"
+                  max="2030"
+                  value="2024"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="movieGenre" class="form-label">Genre</label>
+                <select class="form-select" id="movieGenre" required>
+                  <option value="action">Action</option>
+                  <option value="drama">Drama</option>
+                  <option value="comedy">Comedy</option>
+                  <option value="horror">Horror</option>
+                  <option value="sci-fi">Sci-Fi</option>
+                  <option value="romance">Romance</option>
+                  <option value="thriller">Thriller</option>
+                  <option value="animation">Animation</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="movieDirector" class="form-label"
+                  >Sutradara (Opsional)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="movieDirector"
+                  placeholder="Nama sutradara"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Rating</label>
+                <div class="star-rating" id="starRating">
+                  <span class="star" data-rating="1">★</span>
+                  <span class="star" data-rating="2">★</span>
+                  <span class="star" data-rating="3">★</span>
+                  <span class="star" data-rating="4">★</span>
+                  <span class="star" data-rating="5">★</span>
+                </div>
+                <input type="hidden" id="movieRating" value="0" />
+                <small class="text-muted"
+                  >Klik bintang untuk memberi rating (1-5)</small
+                >
+              </div>
+              <div class="mb-3">
+                <label for="movieStatus" class="form-label">Status</label>
+                <select class="form-select" id="movieStatus" required>
+                  <option value="watchlist">Ingin Ditonton</option>
+                  <option value="watched">Sudah Ditonton</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="movieDescription" class="form-label"
+                  >Deskripsi (Opsional)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="movieDescription"
+                  rows="3"
+                  placeholder="Sinopsis atau catatan tentang film ini..."
+                ></textarea>
+              </div>
+
+              <!-- Upload Image Section -->
+              <div class="mb-3">
+                <label class="form-label">Poster Film</label>
+                <div class="upload-container">
+                  <input
+                    type="file"
+                    id="moviePosterUpload"
+                    class="file-input"
+                    accept="image/*"
+                  />
+                  <div class="upload-preview" id="posterPreview">
+                    <div class="upload-placeholder">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      <span>Klik untuk upload poster</span>
+                      <small class="d-block mt-1"
+                        >atau drag & drop gambar di sini</small
+                      >
+                    </div>
+                  </div>
+                  <div class="upload-actions">
+                    <button
+                      type="button"
+                      class="btn btn-primary upload-btn"
+                      onclick="document.getElementById('moviePosterUpload').click()"
+                    >
+                      <i class="fas fa-upload me-2"></i>Pilih Gambar
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      onclick="clearPoster()"
+                      id="clearPosterBtn"
+                      style="display: none"
+                    >
+                      <i class="fas fa-times me-2"></i>Hapus
+                    </button>
+                  </div>
+                  <small class="text-muted"
+                    >Format yang didukung: JPG, PNG, GIF. Maksimal 5MB.</small
+                  >
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Batal
+            </button>
+            <button type="button" class="btn btn-primary" id="saveMovieBtn">
+              Simpan Film
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // PURE LOCAL STORAGE - Tidak ada data sample
+      let movies = JSON.parse(localStorage.getItem("movies")) || [];
+      let currentPosterDataUrl = null;
+
+      // DOM Elements
+      const moviesContainer = document.getElementById("moviesContainer");
+      const emptyState = document.getElementById("emptyState");
+      const addMovieForm = document.getElementById("addMovieForm");
+      const saveMovieBtn = document.getElementById("saveMovieBtn");
+      const totalMoviesEl = document.getElementById("totalMovies");
+      const watchedMoviesEl = document.getElementById("watchedMovies");
+      const watchlistMoviesEl = document.getElementById("watchlistMovies");
+      const avgRatingEl = document.getElementById("avgRating");
+      const statusFilter = document.getElementById("statusFilter");
+      const genreFilter = document.getElementById("genreFilter");
+      const ratingFilter = document.getElementById("ratingFilter");
+      const starRating = document.getElementById("starRating");
+      const movieRating = document.getElementById("movieRating");
+      const posterPreview = document.getElementById("posterPreview");
+      const moviePosterUpload = document.getElementById("moviePosterUpload");
+      const clearPosterBtn = document.getElementById("clearPosterBtn");
+
+      // Initialize the app
+      document.addEventListener("DOMContentLoaded", function () {
+        renderMovies();
+        updateStats();
+        setupEventListeners();
+        setupStarRating();
+        setupImageUpload();
+      });
+
+      // Setup event listeners
+      function setupEventListeners() {
+        saveMovieBtn.addEventListener("click", addMovie);
+        statusFilter.addEventListener("change", filterMovies);
+        genreFilter.addEventListener("change", function () {
+          // Update genre chips when dropdown changes
+          document.querySelectorAll(".genre-chip").forEach((chip) => {
+            chip.classList.remove("active");
+            if (chip.getAttribute("data-genre") === this.value) {
+              chip.classList.add("active");
+            }
+          });
+          filterMovies();
+        });
+        ratingFilter.addEventListener("change", filterMovies);
+
+        // Genre chips event listeners
+        document.querySelectorAll(".genre-chip").forEach((chip) => {
+          chip.addEventListener("click", function () {
+            document
+              .querySelectorAll(".genre-chip")
+              .forEach((c) => c.classList.remove("active"));
+            this.classList.add("active");
+            genreFilter.value = this.getAttribute("data-genre");
+            filterMovies();
+          });
+        });
+
+        // Reset form when modal is hidden
+        const addMovieModal = document.getElementById("addMovieModal");
+        addMovieModal.addEventListener("hidden.bs.modal", function () {
+          addMovieForm.reset();
+          resetStarRating();
+          clearPoster();
+        });
+      }
+
+      // Setup image upload functionality
+      function setupImageUpload() {
+        // Click on preview to trigger file input
+        posterPreview.addEventListener("click", function () {
+          moviePosterUpload.click();
+        });
+
+        // Handle file selection
+        moviePosterUpload.addEventListener("change", function (e) {
+          const file = e.target.files[0];
+          if (file) {
+            // Validate file type
+            if (!file.type.match("image.*")) {
+              alert("Harap pilih file gambar (JPG, PNG, GIF)");
+              return;
+            }
+
+            // Validate file size (max 5MB)
+            if (file.size > 5 * 1024 * 1024) {
+              alert("Ukuran file terlalu besar. Maksimal 5MB.");
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              currentPosterDataUrl = e.target.result;
+              posterPreview.innerHTML = `<img src="${currentPosterDataUrl}" alt="Preview Poster">`;
+              posterPreview.classList.add("has-image");
+              clearPosterBtn.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Drag and drop functionality
+        posterPreview.addEventListener("dragover", function (e) {
+          e.preventDefault();
+          posterPreview.style.borderColor = "var(--accent)";
+          posterPreview.style.background = "rgba(255, 255, 255, 0.1)";
+        });
+
+        posterPreview.addEventListener("dragleave", function (e) {
+          e.preventDefault();
+          if (!posterPreview.classList.contains("has-image")) {
+            posterPreview.style.borderColor = "rgba(255, 255, 255, 0.3)";
+            posterPreview.style.background = "rgba(255, 255, 255, 0.05)";
+          }
+        });
+
+        posterPreview.addEventListener("drop", function (e) {
+          e.preventDefault();
+          posterPreview.style.borderColor = "rgba(255, 255, 255, 0.3)";
+          posterPreview.style.background = "rgba(255, 255, 255, 0.05)";
+
+          const files = e.dataTransfer.files;
+          if (files.length > 0) {
+            moviePosterUpload.files = files;
+            moviePosterUpload.dispatchEvent(new Event("change"));
+          }
+        });
+      }
+
+      // Clear poster function
+      function clearPoster() {
+        currentPosterDataUrl = null;
+        moviePosterUpload.value = "";
+        posterPreview.innerHTML = `
+                <div class="upload-placeholder">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <span>Klik untuk upload poster</span>
+                    <small class="d-block mt-1">atau drag & drop gambar di sini</small>
+                </div>
+            `;
+        posterPreview.classList.remove("has-image");
+        clearPosterBtn.style.display = "none";
+      }
+
+      // Setup star rating
+      function setupStarRating() {
+        const stars = starRating.querySelectorAll(".star");
+        stars.forEach((star) => {
+          star.addEventListener("click", function () {
+            const rating = parseInt(this.getAttribute("data-rating"));
+            setStarRating(rating);
+          });
+
+          // Hover effect for stars
+          star.addEventListener("mouseenter", function () {
+            const hoverRating = parseInt(this.getAttribute("data-rating"));
+            highlightStars(hoverRating);
+          });
+
+          star.addEventListener("mouseleave", function () {
+            const currentRating = parseInt(movieRating.value);
+            highlightStars(currentRating);
+          });
+        });
+      }
+
+      function highlightStars(rating) {
+        const stars = starRating.querySelectorAll(".star");
+        stars.forEach((star) => {
+          const starRating = parseInt(star.getAttribute("data-rating"));
+          if (starRating <= rating) {
+            star.style.color = "var(--warning)";
+          } else {
+            star.style.color = "#555";
+          }
+        });
+      }
+
+      function setStarRating(rating) {
+        movieRating.value = rating;
+        const stars = starRating.querySelectorAll(".star");
+        stars.forEach((star) => {
+          const starRating = parseInt(star.getAttribute("data-rating"));
+          if (starRating <= rating) {
+            star.classList.add("active");
+          } else {
+            star.classList.remove("active");
+          }
+        });
+      }
+
+      function resetStarRating() {
+        movieRating.value = 0;
+        const stars = starRating.querySelectorAll(".star");
+        stars.forEach((star) => {
+          star.classList.remove("active");
+          star.style.color = "#555";
+        });
+      }
+
+      // Add a new movie
+      function addMovie() {
+        const title = document.getElementById("movieTitle").value.trim();
+        const year = parseInt(document.getElementById("movieYear").value);
+        const genre = document.getElementById("movieGenre").value;
+        const director = document.getElementById("movieDirector").value.trim();
+        const rating = parseInt(movieRating.value);
+        const status = document.getElementById("movieStatus").value;
+        const description = document
+          .getElementById("movieDescription")
+          .value.trim();
+
+        // Validation
+        if (!title) {
+          alert("Judul film harus diisi!");
+          return;
+        }
+
+        if (isNaN(year) || year < 1900 || year > 2030) {
+          alert("Tahun rilis harus antara 1900-2030!");
+          return;
+        }
+
+        if (rating === 0) {
+          alert("Harap beri rating untuk film ini!");
+          return;
+        }
+
+        // Use uploaded image or default poster
+        const poster = currentPosterDataUrl || getDefaultPoster(genre);
+
+        const newMovie = {
+          id: Date.now(),
+          title,
+          year,
+          genre,
+          director: director || "Tidak diketahui",
+          rating,
+          status,
+          description: description || "Tidak ada deskripsi",
+          poster: poster,
+          createdAt: new Date().toISOString(),
+        };
+
+        movies.push(newMovie);
+        saveToLocalStorage();
+        renderMovies();
+        updateStats();
+
+        // Reset form dan tutup modal
+        addMovieForm.reset();
+        resetStarRating();
+        clearPoster();
+        bootstrap.Modal.getInstance(
+          document.getElementById("addMovieModal")
+        ).hide();
+
+        // Show success message
+        alert(`"${title}" berhasil ditambahkan!`);
+      }
+
+      function getDefaultPoster(genre) {
+        const colors = {
+          action: "#e74c3c",
+          drama: "#3498db",
+          comedy: "#f39c12",
+          horror: "#8e44ad",
+          "sci-fi": "#1abc9c",
+          romance: "#e84393",
+          thriller: "#2c3e50",
+          animation: "#9b59b6",
+        };
+        const color = colors[genre] || "#2c3e50";
+        return `https://via.placeholder.com/300x450/${color.replace(
+          "#",
+          ""
+        )}/ffffff?text=${genre.toUpperCase()}`;
+      }
+
+      // Delete a movie
+      function deleteMovie(id) {
+        if (
+          confirm("Apakah Anda yakin ingin menghapus film ini dari watchlist?")
+        ) {
+          movies = movies.filter((m) => m.id !== id);
+          saveToLocalStorage();
+          renderMovies();
+          updateStats();
+        }
+      }
+
+      // Toggle movie status
+      function toggleMovieStatus(id) {
+        const movie = movies.find((m) => m.id === id);
+        if (movie) {
+          movie.status = movie.status === "watched" ? "watchlist" : "watched";
+          saveToLocalStorage();
+          renderMovies();
+          updateStats();
+        }
+      }
+
+      // Render movies dengan filter
+      function renderMovies() {
+        const statusFilterValue = statusFilter.value;
+        const genreFilterValue = genreFilter.value;
+        const ratingFilterValue = ratingFilter.value;
+
+        let filteredMovies = movies;
+
+        // Apply status filter
+        if (statusFilterValue !== "all") {
+          filteredMovies = filteredMovies.filter(
+            (movie) => movie.status === statusFilterValue
+          );
+        }
+
+        // Apply genre filter
+        if (genreFilterValue !== "all") {
+          filteredMovies = filteredMovies.filter(
+            (movie) => movie.genre === genreFilterValue
+          );
+        }
+
+        // Apply rating filter
+        if (ratingFilterValue !== "all") {
+          const minRating = parseInt(ratingFilterValue);
+          filteredMovies = filteredMovies.filter(
+            (movie) => movie.rating >= minRating
+          );
+        }
+
+        if (filteredMovies.length === 0) {
+          moviesContainer.style.display = "none";
+          emptyState.style.display = "block";
+        } else {
+          moviesContainer.style.display = "grid";
+          emptyState.style.display = "none";
+          moviesContainer.innerHTML = "";
+
+          filteredMovies.forEach((movie) => {
+            const movieCard = document.createElement("div");
+
+            const starsHTML = Array.from(
+              { length: 5 },
+              (_, i) =>
+                `<i class="fas fa-star${
+                  i < movie.rating ? " text-warning" : " text-secondary"
+                }"></i>`
+            ).join("");
+
+            movieCard.innerHTML = `
+                        <div class="movie-card">
+                            <div class="movie-poster-container">
+                                <img src="${movie.poster}" alt="${
+              movie.title
+            }" class="movie-poster" onerror="this.src='${getDefaultPoster(
+              movie.genre
+            )}'">
+                                <span class="watch-status-badge badge ${
+                                  movie.status === "watched"
+                                    ? "bg-success"
+                                    : "bg-warning"
+                                }">
+                                    <i class="fas ${
+                                      movie.status === "watched"
+                                        ? "fa-check"
+                                        : "fa-clock"
+                                    } me-1"></i>
+                                    ${
+                                      movie.status === "watched"
+                                        ? "Ditonton"
+                                        : "Watchlist"
+                                    }
+                                </span>
+                            </div>
+                            <div class="movie-content">
+                                <h3 class="movie-title">${movie.title} (${
+              movie.year
+            })</h3>
+                                <div class="movie-meta">
+                                    <span class="me-2"><i class="fas fa-film me-1"></i>${
+                                      movie.genre
+                                    }</span>
+                                    <span><i class="fas fa-user me-1"></i>${
+                                      movie.director
+                                    }</span>
+                                </div>
+                                <div class="rating-stars">
+                                    ${starsHTML}
+                                    <span class="ms-1">${movie.rating}/5</span>
+                                </div>
+                                <p class="movie-description">${
+                                  movie.description
+                                }</p>
+                                <div class="movie-tags">
+                                    <span class="movie-tag">${
+                                      movie.genre
+                                    }</span>
+                                    <span class="movie-tag">${movie.year}</span>
+                                    <span class="movie-tag">${
+                                      movie.rating
+                                    }★</span>
+                                </div>
+                                <div class="movie-actions">
+                                    <button class="btn btn-sm ${
+                                      movie.status === "watched"
+                                        ? "btn-warning"
+                                        : "btn-success"
+                                    }" onclick="toggleMovieStatus(${movie.id})">
+                                        <i class="fas ${
+                                          movie.status === "watched"
+                                            ? "fa-undo"
+                                            : "fa-check"
+                                        } me-1"></i>
+                                        ${
+                                          movie.status === "watched"
+                                            ? "Belum Ditonton"
+                                            : "Sudah Ditonton"
+                                        }
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteMovie(${
+                                      movie.id
+                                    })">
+                                        <i class="fas fa-trash me-1"></i>Hapus
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+            moviesContainer.appendChild(movieCard);
+          });
+        }
+      }
+
+      // Filter movies based on selected filters
+      function filterMovies() {
+        renderMovies();
+      }
+
+      // Update statistics
+      function updateStats() {
+        const totalMovies = movies.length;
+        const watchedMovies = movies.filter(
+          (m) => m.status === "watched"
+        ).length;
+        const watchlistMovies = movies.filter(
+          (m) => m.status === "watchlist"
+        ).length;
+
+        let avgRating = 0;
+        if (movies.length > 0) {
+          const totalRating = movies.reduce(
+            (sum, movie) => sum + movie.rating,
+            0
+          );
+          avgRating = (totalRating / movies.length).toFixed(1);
+        }
+
+        totalMoviesEl.textContent = totalMovies;
+        watchedMoviesEl.textContent = watchedMovies;
+        watchlistMoviesEl.textContent = watchlistMovies;
+        avgRatingEl.textContent = avgRating;
+      }
+
+      // Save to localStorage
+      function saveToLocalStorage() {
+        localStorage.setItem("movies", JSON.stringify(movies));
+      }
+    </script>
+  </body>
+</html>
